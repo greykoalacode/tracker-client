@@ -8,7 +8,7 @@ const defaultUserState = {
     tasks: [],
     habits: [],
     routines: [],
-    schedules: [],
+    logs: [],
   },
   exercises: []
 };

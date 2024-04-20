@@ -31,10 +31,10 @@ function ExerciseForm({
   const params = useParams();
   const { id } = params;
 
-  const { setRoutines, setSchedules, setExercises } = useStoreActions(
+  const { setRoutines, setLogs, setExercises } = useStoreActions(
     (actions) => ({
       setRoutines: actions.setRoutines,
-      setSchedules: actions.setSchedules,
+      setLogs: actions.setLogs,
       setExercises: actions.setExercises,
     })
   );
@@ -49,9 +49,9 @@ function ExerciseForm({
           history.push("/login");
         }
       } else if (identifier === "log") {
-        let result = await api.put(`/schedules/${id}`, details);
+        let result = await api.put(`/logs/${id}`, details);
         if (result.status === 200) {
-          setSchedules(result.data);
+          setLogs(result.data);
         } else if (result.status === 401) {
           history.push("/login");
         }

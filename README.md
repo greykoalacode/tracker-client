@@ -13,7 +13,9 @@ Frontend is developed with ReactJS, Redux Wrapper & additional libraries like Re
 
 - Todo App: It can be utilized for tasks management
 - Workout Tracker: Add workout logs and maintain routines to repeat it wherever required.
-- Habit Tracker: Every habit has a 21-day date set in with metrics like streak count, progress. 
+- Habit Tracker: Every habit has a 21-day date set in with metrics like streak count, progress.
+
+![image](https://github.com/greykoalacode/tracker-server/assets/32214378/19a67ea9-9d93-4328-b5c9-66b277278224)
 
 # Getting Started with Create React App
 

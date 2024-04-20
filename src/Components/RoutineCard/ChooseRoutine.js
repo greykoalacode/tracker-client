@@ -40,17 +40,17 @@ function ChooseRoutine() {
   const { id } = params;
   const history = useHistory();
   const user = useStoreState((state) => state.user);
-  const setSchedules = useStoreActions((actions) => actions.setSchedules);
+  const setLogs = useStoreActions((actions) => actions.setLogs);
   const { routines } = user;
   const { handleSubmit, control, reset } = useForm();
   const onSubmit = async (data) => {
-    const result = await api.put(`/schedules/${id}`, {
+    const result = await api.put(`/logs/${id}`, {
       ...data,
       addRoutine: true,
     });
     if (result.status === 200) {
       if (result.status === 200) {
-        setSchedules(result.data);
+        setLogs(result.data);
         reset();
       } else if (result.status === 401) {
         history.push("/login");

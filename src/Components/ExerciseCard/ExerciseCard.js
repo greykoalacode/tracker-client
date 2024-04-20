@@ -15,9 +15,9 @@ function ExerciseCard({
   const params = useParams();
   const { id } = params;
   const user = useStoreState((state) => state.user);
-  const { setSchedules, setRoutines } = useStoreActions((actions) => ({
+  const { setLogs, setRoutines } = useStoreActions((actions) => ({
     setRoutines: actions.setRoutines,
-    setSchedules: actions.setSchedules,
+    setLogs: actions.setLogs,
   }));
 
   const deleteExercise = () => {
@@ -48,9 +48,9 @@ function ExerciseCard({
           filter: true,
           workouts: filteredWorkouts,
         };
-        let result = await api.put(`/schedules/${id}`, newScheduleObj);
+        let result = await api.put(`/logs/${id}`, newScheduleObj);
         if (result.status === 200) {
-          setSchedules(result.data);
+          setLogs(result.data);
         } else if (result.status === 401) {
           history.push("/login");
         }

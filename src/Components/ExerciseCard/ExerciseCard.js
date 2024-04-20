@@ -9,7 +9,7 @@ function ExerciseCard({
   workout,
   index,
   identifier="",
-  scheduleDate = null,
+  logDate = null,
 }) {
   const history = useHistory();
   const params = useParams();
@@ -110,7 +110,7 @@ function ExerciseCard({
                 workout={workout}
                 workoutIndex={index}
                 identifier={identifier}
-                scheduleDate={scheduleDate}
+                logDate={logDate}
                 editExerciseId={exercise._id}
               />
             </Modal>

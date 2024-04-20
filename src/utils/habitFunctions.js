@@ -2,6 +2,11 @@ import moment from "moment";
 
 export const parseDate = (date,format='YYYY-MM-DD') => moment(date).format(format);
 
+export const compareDates = (date1, date2) => {
+  return moment(date1).isSame(date2);
+}
+
+
 export const progressCounter = (habits) => (habits.filter(each => each.status !== false).length / habits.length).toFixed(3);
 
 export const progressClassname= (each) => {

@@ -4,12 +4,8 @@ import { useStoreActions, useStoreState } from "easy-peasy";
 function AddExercise({
     defaultWorkoutCondition,
     editExerciseId,
-    register,
-    workout,
     bodyparts,
-    scheduleDate,
-    defaultWorkout,
-    identifier
+    register
 }) {
   const { user, exercises } = useStoreState((state) => ({
     user: state.user,

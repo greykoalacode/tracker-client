@@ -6,13 +6,15 @@ import { api } from "../../http/ApiService";
 import data from "../../data/index";
 import SetForm from "./SetForm";
 import AddExercise from "../AddExercise/AddExercise";
+import ExerciseAdder from "../AddExercise/ExerciseAdder";
+import { compareDates, parseDate } from "../../utils/habitFunctions";
 
 function ExerciseForm({
   defaultWorkout = false,
   workout = {},
   workoutIndex = 0,
   identifier = "",
-  scheduleDate = null,
+  logDate = null,
   editExerciseId = null,
 }) {
   const { user, exercises } = useStoreState((state) => ({
@@ -25,11 +27,42 @@ function ExerciseForm({
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm(user.routines);
+  } = useForm();
 
   const history = useHistory();
   const params = useParams();
   const { id } = params;
+
+  const [defaultWorkoutCondition, setDefaultWorkoutCondition] = useState(
+    defaultWorkout && editExerciseId !== null
+  );
+
+  function mapWorkoutAsOption(exercise) {
+    return { value: exercise._id, label: exercise.name };
+  }
+
+  const [part, setPart] = useState(
+    defaultWorkoutCondition
+      ? exercises.find((each) => each._id === editExerciseId).bodyPart
+      : ""
+  );
+
+  const filteredExercises =
+    part !== ""
+      ? exercises.filter(
+          (each) => each.bodyPart === part && each._id !== editExerciseId
+        )
+      : exercises;
+  const filteredExercisesOptions = filteredExercises.map((eachExercise) => ({
+    value: eachExercise._id,
+    label: eachExercise.name,
+  }));
+
+  const [exercise, setExercise] = useState(
+    Object.keys(workout).length > 0
+      ? mapWorkoutAsOption(workout.exercise)
+      : mapWorkoutAsOption(exercises[0])
+  );
 
   const { setRoutines, setLogs, setExercises } = useStoreActions((actions) => ({
     setRoutines: actions.setRoutines,
@@ -38,16 +71,35 @@ function ExerciseForm({
   }));
 
   const update = (details) => {
+    console.log(exercise);
+    const exerciseObj =  {
+      ...details.workouts,
+      exercise: exercise.value,
+    };
+
+    console.log(exerciseObj);
+    user.logs.forEach(element => {
+      console.log(compareDates(element.date, logDate));
+    });
+    const filteredWorkouts = user.logs.filter(each =>  compareDates(each.date, logDate))[0].workouts;
+
+    let workouts = [...filteredWorkouts];
+    workouts.splice(workoutIndex, 0, exerciseObj);
+    const workoutArr = filteredWorkouts.length > 0 ? workouts: [exerciseObj]
+    const updateObj = {
+      date: details.date,
+      workouts: workoutArr,
+    };
     async function updateCall() {
       if (identifier === "routine") {
-        let result = await api.put(`/routines/${id}`, details);
+        let result = await api.put(`/routines/${id}`, updateObj);
         if (result.status === 200) {
           setRoutines(result.data);
         } else if (result.status === 401) {
           history.push("/login");
         }
       } else if (identifier === "log") {
-        let result = await api.put(`/logs/${id}`, details);
+        let result = await api.put(`/logs/${id}`, updateObj);
         if (result.status === 200) {
           setLogs(result.data);
         } else if (result.status === 401) {
@@ -58,9 +110,7 @@ function ExerciseForm({
     }
     updateCall();
   };
-  const [defaultWorkoutCondition, setDefaultWorkoutCondition] = useState(
-    defaultWorkout && editExerciseId !== null
-  );
+
   // const [part, setPart] = useState(defaultWorkoutCondition ? exercises.find(each => each._id === editExerciseId).bodyPart : "");
   const defaultKeys = Object.keys(workout).length;
   const { bodyparts } = data;
@@ -117,22 +167,29 @@ function ExerciseForm({
         {identifier === "log" && (
           <input
             className="d-none"
-            defaultValue={scheduleDate}
+            defaultValue={logDate}
             {...register("date")}
           />
         )}
         <div className="row">
           <div className="col">
-            <AddExercise
-              defaultWorkout={defaultWorkout}
+            <ExerciseAdder
               defaultWorkoutCondition={defaultWorkoutCondition}
-              workout={workout}
-              register={register}
               editExerciseId={editExerciseId}
-              identifier={identifier}
+              filteredExercisesOptions={filteredExercisesOptions}
               bodyparts={bodyparts}
-              scheduleDate={scheduleDate}
+              part={part}
+              setPart={setPart}
+              exercise={exercise}
+              defaultExercise={workout.exercise}
+              setExercise={setExercise}
             />
+            {/* <AddExercise
+              defaultWorkoutCondition={defaultWorkoutCondition}
+              editExerciseId={editExerciseId}
+              bodyparts={bodyparts}
+              register={register}
+            /> */}
             <>
               {list.length > 0 ? (
                 <div className="my-4">

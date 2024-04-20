@@ -31,13 +31,11 @@ function ExerciseForm({
   const params = useParams();
   const { id } = params;
 
-  const { setRoutines, setLogs, setExercises } = useStoreActions(
-    (actions) => ({
-      setRoutines: actions.setRoutines,
-      setLogs: actions.setLogs,
-      setExercises: actions.setExercises,
-    })
-  );
+  const { setRoutines, setLogs, setExercises } = useStoreActions((actions) => ({
+    setRoutines: actions.setRoutines,
+    setLogs: actions.setLogs,
+    setExercises: actions.setExercises,
+  }));
 
   const update = (details) => {
     async function updateCall() {
@@ -109,6 +107,20 @@ function ExerciseForm({
   return (
     <div>
       <form onSubmit={handleSubmit(update)}>
+        {defaultWorkout && (
+          <input
+            className="d-none"
+            defaultValue={workout._id}
+            {...register("workouts._id")}
+          />
+        )}
+        {identifier === "log" && (
+          <input
+            className="d-none"
+            defaultValue={scheduleDate}
+            {...register("date")}
+          />
+        )}
         <div className="row">
           <div className="col">
             <AddExercise

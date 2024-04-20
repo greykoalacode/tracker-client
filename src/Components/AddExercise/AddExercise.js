@@ -20,20 +20,6 @@ function AddExercise({
   const filteredExercises = part !== "" ? exercises.filter(each => each.bodyPart === part) : exercises;
   return (
     <div>
-      {defaultWorkout && (
-        <input
-          className="d-none"
-          defaultValue={workout._id}
-          {...register("workouts._id")}
-        />
-      )}
-      {identifier === "log" && (
-        <input
-          className="d-none"
-          defaultValue={scheduleDate}
-          {...register("date")}
-        />
-      )}
       <div className="form-group mb-3">
         <label className="form-label">Choose Body Part</label>
         <select
